@@ -1,0 +1,76 @@
+package tp1p3;
+
+import java.awt.Color;
+import java.util.Random;
+
+public class Juego {
+    private Grilla grilla;
+    private Color[] colores = {
+        Color.RED, Color.GREEN, Color.BLUE,
+        Color.YELLOW, Color.MAGENTA, Color.ORANGE
+    };
+    private Random rand = new Random();
+
+    public Juego(Grilla grilla) {
+        this.grilla = grilla;
+    }
+
+    public Color getColorAleatorio() {
+        return colores[rand.nextInt(colores.length)];
+    }
+
+    public void cambiarColorCelda(Celda celda) {
+        Color nuevoColor = getColorAleatorio();
+        celda.setColor(nuevoColor);
+
+        if (tieneVecinoDelMismoColor(celda, nuevoColor)) {
+            apagarCeldaYVecinas(celda);
+        }
+    }
+
+    private boolean tieneVecinoDelMismoColor(Celda celda, Color color) {
+        int[][] vecinos = {
+            {-1, 0}, {1, 0}, {0, -1}, {0, 1}
+        };
+
+        for (int[] dir : vecinos) {
+            int fila = celda.getFila() + dir[0];
+            int col = celda.getColumna() + dir[1];
+            Celda vecina = grilla.getCelda(fila, col);
+            if (vecina != null && vecina.getColor().equals(color)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void apagarCeldaYVecinas(Celda celda) {
+        celda.apagar();
+
+        int[][] vecinos = {
+            {-1, 0}, {1, 0}, {0, -1}, {0, 1}
+        };
+
+        for (int[] dir : vecinos) {
+            int fila = celda.getFila() + dir[0];
+            int col = celda.getColumna() + dir[1];
+            Celda vecina = grilla.getCelda(fila, col);
+            if (vecina != null) {
+                vecina.apagar();
+            }
+        }
+    }
+
+    public boolean verificarVictoria() {
+        Celda[][] celdas = grilla.getCeldas();
+
+        for (int fila = 0; fila < 5; fila++) {
+            for (int col = 0; col < 5; col++) {
+                Celda celda = celdas[fila][col];
+                if (celda.estaApagada()) return false;
+                if (tieneVecinoDelMismoColor(celda, celda.getColor())) return false;
+            }
+        }
+        return true;
+    }
+}

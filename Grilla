@@ -1,0 +1,26 @@
+package tp1p3;
+
+public class Grilla {
+    private Celda[][] celdas;
+
+    public Grilla() {
+        celdas = new Celda[5][5];
+
+        for (int fila = 0; fila < 5; fila++) {
+            for (int col = 0; col < 5; col++) {
+                celdas[fila][col] = new Celda(fila, col);
+            }
+        }
+    }
+
+    public Celda getCelda(int fila, int col) {
+        if (fila >= 0 && fila < 5 && col >= 0 && col < 5) {
+            return celdas[fila][col];
+        }
+        return null;
+    }
+
+    public Celda[][] getCeldas() {
+        return celdas;
+    }
+}

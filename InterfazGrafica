@@ -1,0 +1,57 @@
+package tp1p3;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class InterfazGrafica {
+
+    private JFrame frame;
+    private Grilla grilla;
+    private Juego juego;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                InterfazGrafica window = new InterfazGrafica();
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public InterfazGrafica() {
+        initialize();
+    }
+
+    private void initialize() {
+    
+        frame = new JFrame("Juego Histeria");
+        frame.setBounds(100, 100, 600, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new GridLayout(5, 5));
+
+        grilla = new Grilla();
+        juego = new Juego(grilla);
+
+       
+        Celda[][] celdas = grilla.getCeldas();
+        for (int fila = 0; fila < 5; fila++) {
+            for (int col = 0; col < 5; col++) {
+                Celda celda = celdas[fila][col];
+                JButton boton = celda.getBoton();
+
+   
+                boton.addActionListener(e -> {
+                    juego.cambiarColorCelda(celda);
+                    if (juego.verificarVictoria()) {
+                        JOptionPane.showMessageDialog(frame, "¡Felicidades! Completaste el juego.");
+                    }
+                });
+
+       
+                frame.add(boton);
+            }
+        }
+    }
+}
